@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../core/api_service.dart';
 import '../core/preferences.dart';
 
@@ -134,7 +135,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             style: const TextStyle(color: Colors.red)),
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Clipboard.setData(ClipboardData(text: _error!));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Error copied')),
+                          );
+                        },
                         child: const Icon(Icons.copy, color: Colors.white54, size: 18),
                       ),
                     ],
