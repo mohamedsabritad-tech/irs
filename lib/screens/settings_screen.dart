@@ -14,12 +14,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _saving = false;
   String? _error;
 
+  final _urlCtrl = TextEditingController();
   final _daysCtrl = TextEditingController();
   final _colorCtrl = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    _urlCtrl.text = Preferences.apiUrl;
     _load();
   }
 
@@ -33,8 +35,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _daysCtrl.text = s['auto_delete_days']?.toString() ?? '30';
           _colorCtrl.text = s['theme_color'] as String? ?? '#6366F1';
         });
-      } else {
-        setState(() => _error = res['error'] as String? ?? 'Load failed');
       }
     } catch (e) {
       setState(() => _error = e.toString());
@@ -44,6 +44,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _save() async {
+    Preferences.apiUrl =
+        _urlCtrl.text.trim().replaceAll(RegExp(r'/+$'), '');
     setState(() { _saving = true; _error = null; });
     try {
       final res = await ApiService.updateSettings({
@@ -68,6 +70,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   void dispose() {
+    _urlCtrl.dispose();
     _daysCtrl.dispose();
     _colorCtrl.dispose();
     super.dispose();
@@ -75,12 +78,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-    if (_error != null) {
-      return Center(child: Text(_error!, style: const TextStyle(color: Colors.red)));
-    }
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: ListView(
@@ -92,33 +89,65 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const Text('Connection',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _urlCtrl,
+                    decoration: const InputDecoration(
+                      labelText: 'Server URL',
+                      hintText: 'https://nexus-wos.wasmer.app',
+                      prefixIcon: Icon(Icons.dns),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   const Text('Server Settings',
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 16),
-                  TextField(
-                    controller: _daysCtrl,
-                    decoration: const InputDecoration(
-                        labelText: 'Auto-delete days (0 = disabled)'),
-                    keyboardType: TextInputType.number,
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: _colorCtrl,
-                    decoration: const InputDecoration(labelText: 'Theme color (hex)'),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton(
-                      onPressed: _saving ? null : _save,
-                      child: _saving
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2))
-                          : const Text('Save'),
+                  if (_loading)
+                    const Center(child: CircularProgressIndicator())
+                  else ...[
+                    TextField(
+                      controller: _daysCtrl,
+                      decoration: const InputDecoration(
+                          labelText: 'Auto-delete days (0 = disabled)'),
+                      keyboardType: TextInputType.number,
                     ),
-                  ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: _colorCtrl,
+                      decoration: const InputDecoration(labelText: 'Theme color (hex)'),
+                    ),
+                    const SizedBox(height: 16),
+                    if (_error != null)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Text(_error!,
+                            style: const TextStyle(color: Colors.red, fontSize: 12)),
+                      ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton(
+                        onPressed: _saving ? null : _save,
+                        child: _saving
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(strokeWidth: 2))
+                            : const Text('Save'),
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),

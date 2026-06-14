@@ -13,11 +13,20 @@ class _LoginScreenState extends State<LoginScreen> {
   final _userCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
   final _codeCtrl = TextEditingController();
+  final _urlCtrl = TextEditingController();
   bool _loading = false;
   String? _error;
   bool _isSignup = false;
+  bool _showUrl = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _urlCtrl.text = Preferences.apiUrl;
+  }
 
   Future<void> _submit() async {
+    Preferences.apiUrl = _urlCtrl.text.trim().replaceAll(RegExp(r'/+$'), '');
     setState(() { _loading = true; _error = null; });
     try {
       final res = _isSignup
@@ -44,12 +53,24 @@ class _LoginScreenState extends State<LoginScreen> {
     _userCtrl.dispose();
     _passCtrl.dispose();
     _codeCtrl.dispose();
+    _urlCtrl.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(_showUrl ? Icons.link_off : Icons.link),
+            onPressed: () => setState(() => _showUrl = !_showUrl),
+            tooltip: 'Server URL',
+          ),
+        ],
+      ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(32),
@@ -62,8 +83,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: Theme.of(context).textTheme.headlineMedium),
               Text('War of Shadows Manager',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Color(0xFF8A94A6))),
+                      color: const Color(0xFF8A94A6))),
               const SizedBox(height: 32),
+              if (_showUrl) ...[
+                TextField(
+                  controller: _urlCtrl,
+                  decoration: const InputDecoration(
+                    labelText: 'Server URL',
+                    hintText: 'https://nexus-wos.wasmer.app',
+                    prefixIcon: Icon(Icons.dns),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
               TextField(
                 controller: _userCtrl,
                 decoration: const InputDecoration(

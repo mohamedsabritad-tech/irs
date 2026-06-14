@@ -4,7 +4,7 @@ import 'app_token.dart';
 import 'preferences.dart';
 
 class ApiService {
-  static const _base = 'https://nexus-wos.wasmer.app/api/android/';
+  static String get _base => '${Preferences.apiUrl}/api/android/';
 
   static final _client = http.Client();
 
