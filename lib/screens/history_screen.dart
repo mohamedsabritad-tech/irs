@@ -25,8 +25,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
     setState(() { _loading = true; _error = null; });
     try {
       final res = await ApiService.getRedeemHistory(limit: 200);
-      if (res['ok'] == true && res['logs'] != null) {
-        final list = res['logs'] as List;
+      if (res['ok'] == true && res['data'] != null) {
+        final list = res['data'] as List;
         setState(() => _logs = list
             .map((e) => RedeemLog.fromJson(e as Map<String, dynamic>))
             .toList());

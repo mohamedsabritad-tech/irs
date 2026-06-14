@@ -35,9 +35,11 @@ class _LoginScreenState extends State<LoginScreen> {
           : await ApiService.login(_userCtrl.text.trim(), _passCtrl.text,
               _codeCtrl.text.trim());
       if (res['ok'] == true) {
-        Preferences.token = res['token'] as String?;
-        Preferences.username = res['username'] as String?;
-        Preferences.role = res['role'] as String?;
+        final d = res['data'] as Map<String, dynamic>;
+        Preferences.token = d['token'] as String?;
+        final u = d['user'] as Map<String, dynamic>;
+        Preferences.username = u['username'] as String?;
+        Preferences.role = u['role'] as String?;
         if (mounted) Navigator.pushReplacementNamed(context, '/home');
       } else {
         setState(() => _error = res['error'] as String? ?? 'Login failed');

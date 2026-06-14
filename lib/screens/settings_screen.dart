@@ -29,8 +29,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() { _loading = true; _error = null; });
     try {
       final res = await ApiService.getSettings();
-      if (res['ok'] == true && res['settings'] != null) {
-        final s = res['settings'] as Map<String, dynamic>;
+      if (res['ok'] == true && res['data'] != null) {
+        final s = res['data'] as Map<String, dynamic>;
         setState(() {
           _daysCtrl.text = s['auto_delete_days']?.toString() ?? '30';
           _colorCtrl.text = s['theme_color'] as String? ?? '#6366F1';

@@ -25,8 +25,8 @@ class _TransferScreenState extends State<TransferScreen> {
     setState(() { _loading = true; _error = null; });
     try {
       final res = await ApiService.getTransferPlayers();
-      if (res['ok'] == true && res['players'] != null) {
-        final list = res['players'] as List;
+      if (res['ok'] == true && res['data'] != null) {
+        final list = res['data'] as List;
         setState(() => _players = list
             .map((e) => TransferPlayer.fromJson(e as Map<String, dynamic>))
             .toList());

@@ -25,8 +25,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
     setState(() { _loading = true; _error = null; });
     try {
       final res = await ApiService.getActivity();
-      if (res['ok'] == true && res['activity'] != null) {
-        final list = res['activity'] as List;
+      if (res['ok'] == true && res['data'] != null) {
+        final list = res['data'] as List;
         setState(() => _entries = list
             .map((e) => ActivityEntry.fromJson(e as Map<String, dynamic>))
             .toList());

@@ -26,8 +26,8 @@ class _AccountsScreenState extends State<AccountsScreen> {
     setState(() { _loading = true; _error = null; });
     try {
       final res = await ApiService.getAccounts();
-      if (res['ok'] == true && res['accounts'] != null) {
-        final list = res['accounts'] as List;
+      if (res['ok'] == true && res['data'] != null) {
+        final list = res['data'] as List;
         setState(() => _accounts = list
             .map((e) => Account.fromJson(e as Map<String, dynamic>))
             .toList());

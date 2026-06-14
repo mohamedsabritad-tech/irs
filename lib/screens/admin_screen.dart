@@ -33,8 +33,8 @@ class _AdminScreenState extends State<AdminScreen> with SingleTickerProviderStat
   Future<void> _loadAlliances() async {
     try {
       final res = await ApiService.getAlliances();
-      if (res['ok'] == true && res['alliances'] != null) {
-        final list = res['alliances'] as List;
+      if (res['ok'] == true && res['data'] != null) {
+        final list = res['data'] as List;
         setState(() => _alliances = list
             .map((e) => Alliance.fromJson(e as Map<String, dynamic>))
             .toList());
@@ -46,8 +46,8 @@ class _AdminScreenState extends State<AdminScreen> with SingleTickerProviderStat
   Future<void> _loadRecords() async {
     try {
       final res = await ApiService.getPlayerRecords();
-      if (res['ok'] == true && res['records'] != null) {
-        final list = res['records'] as List;
+      if (res['ok'] == true && res['data'] != null) {
+        final list = res['data'] as List;
         setState(() => _playerRecords = list
             .map((e) => Account.fromJson(e as Map<String, dynamic>))
             .toList());
@@ -59,8 +59,8 @@ class _AdminScreenState extends State<AdminScreen> with SingleTickerProviderStat
   Future<void> _loadActivity() async {
     try {
       final res = await ApiService.getActivity();
-      if (res['ok'] == true && res['activity'] != null) {
-        final list = res['activity'] as List;
+      if (res['ok'] == true && res['data'] != null) {
+        final list = res['data'] as List;
         setState(() => _activity = list
             .map((e) => ActivityEntry.fromJson(e as Map<String, dynamic>))
             .toList());

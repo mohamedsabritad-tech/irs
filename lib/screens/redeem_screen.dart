@@ -28,8 +28,8 @@ class _RedeemScreenState extends State<RedeemScreen> {
   Future<void> _loadCodes() async {
     try {
       final res = await ApiService.getRedeemCodes();
-      if (res['ok'] == true && res['codes'] != null) {
-        final list = res['codes'] as List;
+      if (res['ok'] == true && res['data'] != null) {
+        final list = res['data'] as List;
         setState(() => _codes = list
             .map((e) => GiftCode.fromJson(e as Map<String, dynamic>))
             .toList());
@@ -41,8 +41,8 @@ class _RedeemScreenState extends State<RedeemScreen> {
   Future<void> _loadHistory() async {
     try {
       final res = await ApiService.getRedeemHistory();
-      if (res['ok'] == true && res['logs'] != null) {
-        final list = res['logs'] as List;
+      if (res['ok'] == true && res['data'] != null) {
+        final list = res['data'] as List;
         setState(() => _history = list
             .map((e) => RedeemLog.fromJson(e as Map<String, dynamic>))
             .toList());
