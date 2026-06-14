@@ -18,8 +18,8 @@ class Account {
         id: j['id'] as String? ?? '',
         gameId: j['game_id'] as String? ?? '',
         nickname: j['nickname'] as String? ?? '',
-        level: j['level'] as String? ?? '',
-        kingdom: j['kingdom'] as String? ?? '',
+        level: optStr(j, 'level') ?? '',
+        kingdom: optStr(j, 'kingdom') ?? '',
         stoveLevel: optStr(j, 'stove_level'),
         furnaceTier: optStr(j, 'furnace_tier'),
         allianceTag: optStr(j, 'alliance_tag'),
@@ -50,8 +50,8 @@ class TransferPlayer {
         id: j['id'] as String? ?? '',
         gameId: j['game_id'] as String? ?? '',
         nickname: j['nickname'] as String? ?? '',
-        level: j['level'] as String? ?? '',
-        kingdom: j['kingdom'] as String? ?? '',
+        level: optStr(j, 'level') ?? '',
+        kingdom: optStr(j, 'kingdom') ?? '',
         stoveLevel: optStr(j, 'stove_level'),
         furnaceTier: optStr(j, 'furnace_tier'),
         avatarImage: optStr(j, 'avatar_image'),
@@ -82,9 +82,9 @@ class GiftCode {
 }
 
 class RedeemLog {
-  final String? id, gameId, code, status, message, createdAt;
+  final String? id, gameId, code, status, message, redeemedBy, createdAt;
 
-  RedeemLog({this.id, this.gameId, this.code, this.status, this.message, this.createdAt});
+  RedeemLog({this.id, this.gameId, this.code, this.status, this.message, this.redeemedBy, this.createdAt});
 
   factory RedeemLog.fromJson(Map<String, dynamic> j) => RedeemLog(
         id: optStr(j, 'id'),
@@ -92,6 +92,7 @@ class RedeemLog {
         code: optStr(j, 'code'),
         status: optStr(j, 'status'),
         message: optStr(j, 'message'),
+        redeemedBy: optStr(j, 'redeemed_by'),
         createdAt: optStr(j, 'created_at'),
       );
 }
